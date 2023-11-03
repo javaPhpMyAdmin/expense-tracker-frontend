@@ -4,7 +4,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button } from '@/components';
 import { useGlobalContext } from '@/hooks';
-import { plus } from '@/utils';
+import { plus, incomeOptions } from '@/utils';
 
 export default function Form() {
   const [inputState, setInput] = React.useState({
@@ -13,9 +13,10 @@ export default function Form() {
     description: '',
     category: '',
     date: '',
+    type: 'income',
   });
 
-  const { addIncome } = useGlobalContext();
+  const { addIncome, getIncomes } = useGlobalContext();
 
   const { title, description, category, date, amount } = inputState;
 
@@ -26,6 +27,7 @@ export default function Form() {
   const handleSubmit = (e) => {
     e.preventDefault();
     addIncome(inputState);
+    getIncomes();
     console.log('submitting');
   };
 
@@ -71,14 +73,11 @@ export default function Form() {
           <option value="" disabled>
             Select Category
           </option>
-          <option value="salary">Salary</option>
-          <option value="freelancing">Freelancing</option>
-          <option value="investiments">Investiments</option>
-          <option value="stocks">Stocks</option>
-          <option value="bitcoin">Bitcoin</option>
-          <option value="bank">Bank Transfer</option>
-          <option value="youtube">Youtube</option>
-          <option value="other">Other</option>
+          {Object.entries(incomeOptions).map(([key, value]) => (
+            <option key={key} value={value}>
+              {value.charAt(0).toLocaleUpperCase() + value.slice(1)}
+            </option>
+          ))}
         </select>
       </div>
       <div className="input-control">

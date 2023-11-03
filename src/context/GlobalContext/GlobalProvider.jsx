@@ -1,8 +1,9 @@
 import React from 'react';
-import { GlobalContext } from './GlobalContext';
 import axios from 'axios';
+import { GlobalContext } from './GlobalContext';
+import { config } from '@/config';
 
-const BASE_URL = 'http://localhost:5001/api/v1';
+const BASE_URL = config.BASE_API_URL;
 
 export default function GlobalProvider({ children }) {
   const [incomes, setIncomes] = React.useState([]);
@@ -11,10 +12,10 @@ export default function GlobalProvider({ children }) {
 
   const addIncome = async (income) => {
     const response = await axios
-      .post(`${BASE_URL}/add-income`, income)
+      .post(`${BASE_URL}${config.ADD_INCOME}`, income)
       .then((res) => {
-        alert('SUCCESS INCOME ADDED', res.json());
-        // setIncomes(res);
+        alert('SUCCESS INCOME ADDED');
+        getIncomes();
       })
       .catch((err) => {
         setError(err.response.data.message);
@@ -22,18 +23,19 @@ export default function GlobalProvider({ children }) {
     console.log(response);
   };
 
-  const getIncomes = () => {
-    axios
-      .get(`${BASE_URL}/get-incomes`)
-      .then((res) => {
-        console.log(res.data.incomes);
-        setIncomes(res.data.incomes);
-      })
-      .catch((err) => {
-        setError(err.response.data.message);
-      });
+  const getIncomes = async () => {
+    const res = await axios.get(`${BASE_URL}${config.GET_INCOMES}`);
+    setIncomes(res.data.incomes);
   };
-  const getExpenses = () => {};
+  const getExpenses = async () => {
+    const res = await axios.get(`${BASE_URL}${config.GET_EXPENSES}`);
+    setExpenses(res.data.expenses);
+  };
+
+  const deleteIncome = async (id) => {
+    const res = await axios.delete(`${BASE_URL}${config.DELETE_INCOME}/${id}`);
+    getIncomes();
+  };
 
   React.useEffect(() => {
     getIncomes();
@@ -49,6 +51,7 @@ export default function GlobalProvider({ children }) {
         addIncome,
         getIncomes,
         getExpenses,
+        deleteIncome,
       }}
     >
       {children}

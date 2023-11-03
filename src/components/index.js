@@ -5,3 +5,4 @@ export * from './Dashboard';
 export * from './Incomes';
 export * from './Expenses';
 export * from './Form';
+export * from './IncomeItem';
