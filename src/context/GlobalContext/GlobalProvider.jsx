@@ -12,34 +12,73 @@ export default function GlobalProvider({ children }) {
 
   const addIncome = async (income) => {
     const response = await axios
-      .post(`${BASE_URL}${config.ADD_INCOME}`, income)
+      .post(`${BASE_URL}${config.API_ROUTES.ADD_INCOME}`, income)
       .then((res) => {
         alert('SUCCESS INCOME ADDED');
         getIncomes();
+        totalIncome();
       })
       .catch((err) => {
         setError(err.response.data.message);
       });
-    console.log(response);
   };
-
+  const addExpense = async (expense) => {
+    const response = await axios
+      .post(`${BASE_URL}${config.API_ROUTES.ADD_EXPENSE}`, expense)
+      .then((res) => {
+        alert('SUCCESS EXPENSE ADDED');
+        getExpenses();
+        totalExpense();
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      });
+  };
   const getIncomes = async () => {
-    const res = await axios.get(`${BASE_URL}${config.GET_INCOMES}`);
+    const res = await axios.get(`${BASE_URL}${config.API_ROUTES.GET_INCOMES}`);
     setIncomes(res.data.incomes);
+    totalIncome();
   };
   const getExpenses = async () => {
-    const res = await axios.get(`${BASE_URL}${config.GET_EXPENSES}`);
+    const res = await axios.get(`${BASE_URL}${config.API_ROUTES.GET_EXPENSES}`);
     setExpenses(res.data.expenses);
   };
 
   const deleteIncome = async (id) => {
-    const res = await axios.delete(`${BASE_URL}${config.DELETE_INCOME}/${id}`);
+    const res = await axios.delete(
+      `${BASE_URL}${config.API_ROUTES.DELETE_INCOME}/${id}`,
+    );
     getIncomes();
+  };
+
+  const deleteExpense = async (id) => {
+    const res = await axios.delete(
+      `${BASE_URL}${config.API_ROUTES.DELETE_EXPENSE}/${id}`,
+    );
+    getExpenses();
+  };
+
+  const totalIncome = () => {
+    let total = 0;
+    incomes.forEach((income) => {
+      total += income.amount;
+    });
+    return total;
+  };
+
+  const totalExpense = () => {
+    let total = 0;
+    expenses.forEach((expense) => {
+      total += expense.amount;
+    });
+    return total;
   };
 
   React.useEffect(() => {
     getIncomes();
     getExpenses();
+    totalIncome();
+    totalExpense();
   }, []);
 
   return (
@@ -49,9 +88,13 @@ export default function GlobalProvider({ children }) {
         expenses,
         error,
         addIncome,
+        addExpense,
         getIncomes,
         getExpenses,
         deleteIncome,
+        deleteExpense,
+        totalIncome,
+        totalExpense,
       }}
     >
       {children}

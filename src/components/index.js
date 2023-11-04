@@ -6,3 +6,4 @@ export * from './Incomes';
 export * from './Expenses';
 export * from './Form';
 export * from './IncomeItem';
+export * from './ExpenseItem';

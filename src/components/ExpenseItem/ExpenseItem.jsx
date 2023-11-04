@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { dollar, calender, comment, trash } from '@/utils';
 import { Button } from '@/components';
@@ -14,8 +13,8 @@ import {
 } from '@/utils';
 import { useGlobalContext } from '@/hooks';
 
-export default function IncomeItem({ item, indicatorColor }) {
-  const { deleteIncome } = useGlobalContext();
+export default function ExpenseItem({ item, indicatorColor }) {
+  const { deleteExpense } = useGlobalContext();
   const categoryIcon = (category) => {
     switch (category) {
       case incomeOptions.SALARY:
@@ -41,11 +40,11 @@ export default function IncomeItem({ item, indicatorColor }) {
   };
 
   const handleDelete = (id) => {
-    deleteIncome(id);
+    deleteExpense(id);
   };
 
   return (
-    <IncomeItemContainer indicator={indicatorColor}>
+    <ExpenseItemContainer indicator={indicatorColor}>
       <div className="icon">
         {item.type === 'expense'
           ? expenseCategoryIcon(item.category)
@@ -80,11 +79,11 @@ export default function IncomeItem({ item, indicatorColor }) {
           </div>
         </div>
       </div>
-    </IncomeItemContainer>
+    </ExpenseItemContainer>
   );
 }
 
-const IncomeItemContainer = styled.div`
+const ExpenseItemContainer = styled.div`
   background: #fcf6f9;
   border: 2px solid #ffffff;
   box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.06);

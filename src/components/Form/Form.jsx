@@ -6,17 +6,17 @@ import { Button } from '@/components';
 import { useGlobalContext } from '@/hooks';
 import { plus, incomeOptions } from '@/utils';
 
-export default function Form() {
+export default function Form({ type = 'income' }) {
   const [inputState, setInput] = React.useState({
     title: '',
     amount: '',
     description: '',
     category: '',
     date: '',
-    type: 'income',
+    type: '',
   });
 
-  const { addIncome, getIncomes } = useGlobalContext();
+  const { addIncome, addExpense } = useGlobalContext();
 
   const { title, description, category, date, amount } = inputState;
 
@@ -26,9 +26,27 @@ export default function Form() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addIncome(inputState);
-    getIncomes();
-    console.log('submitting');
+    if (type === 'income') {
+      setInput({ ...inputState, type: 'income' });
+      addIncome(inputState);
+      setInput({
+        title: '',
+        amount: '',
+        description: '',
+        category: '',
+        date: '',
+      });
+    } else {
+      setInput({ ...inputState, type: 'expense' });
+      addExpense(inputState);
+      setInput({
+        title: '',
+        amount: '',
+        description: '',
+        category: '',
+        date: '',
+      });
+    }
   };
 
   return (
