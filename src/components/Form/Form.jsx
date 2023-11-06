@@ -4,24 +4,27 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button } from '@/components';
 import { useGlobalContext } from '@/hooks';
-import { plus, incomeOptions } from '@/utils';
+import { plus, incomeOptions, expenseOptions } from '@/utils';
+
+const INITIAL_FORM_STATE = {
+  title: '',
+  amount: '',
+  description: '',
+  category: '',
+  date: '',
+  type: '',
+};
 
 export default function Form({ type = 'income' }) {
-  const [inputState, setInput] = React.useState({
-    title: '',
-    amount: '',
-    description: '',
-    category: '',
-    date: '',
-    type: '',
-  });
+  const [inputState, setInput] = React.useState(INITIAL_FORM_STATE);
 
-  const { addIncome, addExpense } = useGlobalContext();
+  const { addIncome, addExpense, error, setError } = useGlobalContext();
 
   const { title, description, category, date, amount } = inputState;
 
   const handleInput = (name) => (e) => {
     setInput({ ...inputState, [name]: e.target.value });
+    setError('');
   };
 
   const handleSubmit = (e) => {
@@ -29,28 +32,17 @@ export default function Form({ type = 'income' }) {
     if (type === 'income') {
       setInput({ ...inputState, type: 'income' });
       addIncome(inputState);
-      setInput({
-        title: '',
-        amount: '',
-        description: '',
-        category: '',
-        date: '',
-      });
+      setInput(INITIAL_FORM_STATE);
     } else {
       setInput({ ...inputState, type: 'expense' });
       addExpense(inputState);
-      setInput({
-        title: '',
-        amount: '',
-        description: '',
-        category: '',
-        date: '',
-      });
+      setInput(INITIAL_FORM_STATE);
     }
   };
 
   return (
     <FormContainer onSubmit={handleSubmit}>
+      {error && <p className="error">{error}</p>}
       <div className="input-control">
         <input
           type="text"
@@ -91,11 +83,17 @@ export default function Form({ type = 'income' }) {
           <option value="" disabled>
             Select Category
           </option>
-          {Object.entries(incomeOptions).map(([key, value]) => (
-            <option key={key} value={value}>
-              {value.charAt(0).toLocaleUpperCase() + value.slice(1)}
-            </option>
-          ))}
+          {type === 'income'
+            ? Object.entries(incomeOptions).map(([key, value]) => (
+                <option key={key} value={value}>
+                  {value.charAt(0).toLocaleUpperCase() + value.slice(1)}
+                </option>
+              ))
+            : Object.entries(expenseOptions).map(([key, value]) => (
+                <option key={key} value={value}>
+                  {value.charAt(0).toLocaleUpperCase() + value.slice(1)}
+                </option>
+              ))}
         </select>
       </div>
       <div className="input-control">
@@ -116,8 +114,7 @@ export default function Form({ type = 'income' }) {
           bRad="30px"
           bg="var(--color-accent)"
           color="#fff"
-          type="submit"
-          name="Add Income"
+          name={type === 'income' ? 'Add Income' : 'Add Expense '}
         />
       </div>
     </FormContainer>

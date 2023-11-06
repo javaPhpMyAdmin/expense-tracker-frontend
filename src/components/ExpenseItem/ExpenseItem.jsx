@@ -1,41 +1,24 @@
 import styled from 'styled-components';
 import { dollar, calender, comment, trash } from '@/utils';
 import { Button } from '@/components';
-import {
-  incomeOptions,
-  expenseOptions,
-  money,
-  freelance,
-  stocks,
-  card,
-  users,
-  piggy,
-} from '@/utils';
+import { expenseOptions, light, water, food, gift, circle } from '@/utils';
 import { useGlobalContext } from '@/hooks';
 
 export default function ExpenseItem({ item, indicatorColor }) {
   const { deleteExpense } = useGlobalContext();
-  const categoryIcon = (category) => {
-    switch (category) {
-      case incomeOptions.SALARY:
-        return money;
-      case incomeOptions.FREELANCE:
-        return freelance;
-    }
-  };
 
   const expenseCategoryIcon = (category) => {
     switch (category) {
       case expenseOptions.LIGHT:
-        return freelance;
+        return light;
       case expenseOptions.WATER:
-        return stocks;
+        return water;
       case expenseOptions.FOOD:
-        return card;
+        return food;
       case expenseOptions.GIFTS:
-        return users;
+        return gift;
       case expenseOptions.OTHER:
-        return piggy;
+        return circle;
     }
   };
 
@@ -45,11 +28,7 @@ export default function ExpenseItem({ item, indicatorColor }) {
 
   return (
     <ExpenseItemContainer indicator={indicatorColor}>
-      <div className="icon">
-        {item.type === 'expense'
-          ? expenseCategoryIcon(item.category)
-          : categoryIcon(item.category)}
-      </div>
+      <div className="icon">{expenseCategoryIcon(item.category)}</div>
       <div className="content">
         <h5>{item.title}</h5>
         <div className="inner-content">

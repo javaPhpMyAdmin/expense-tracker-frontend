@@ -74,11 +74,25 @@ export default function GlobalProvider({ children }) {
     return total;
   };
 
+  const totalBalance = () => {
+    return totalIncome() - totalExpense();
+  };
+
+  const transactionsHistory = () => {
+    const history = [...incomes, ...expenses];
+    history.sort((a, b) => {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+    return history.slice(0, 3);
+  };
+
   React.useEffect(() => {
     getIncomes();
     getExpenses();
     totalIncome();
     totalExpense();
+    totalBalance();
+    transactionsHistory();
   }, []);
 
   return (
@@ -95,6 +109,8 @@ export default function GlobalProvider({ children }) {
         deleteExpense,
         totalIncome,
         totalExpense,
+        totalBalance,
+        transactionsHistory,
       }}
     >
       {children}

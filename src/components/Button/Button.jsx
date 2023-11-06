@@ -1,17 +1,6 @@
-import React from 'react';
 import { styled } from 'styled-components';
-import { InnerLayout } from '@/styles';
 
-export default function Button({
-  type,
-  name,
-  icon,
-  onClick,
-  bg,
-  bPad,
-  color,
-  bRad,
-}) {
+export default function Button({ name, icon, onClick, bg, bPad, color, bRad }) {
   return (
     <ButtonContainer
       style={{
@@ -20,7 +9,7 @@ export default function Button({
         borderRadius: bRad,
         color: color,
       }}
-      type={type}
+      type="submit"
       onClick={onClick}
     >
       {icon}

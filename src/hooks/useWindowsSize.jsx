@@ -1,10 +1,12 @@
 import React from 'react';
-import { useEffect } from 'react';
 
 export function useWindowsSize() {
-  const [size, setSize] = React.useState([0, 0]);
+  const [size, setSize] = React.useState([
+    window.innerWidth,
+    window.innerHeight,
+  ]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const updateSize = () => {
       setSize(window.innerWidth, window.innerHeight);
     };
