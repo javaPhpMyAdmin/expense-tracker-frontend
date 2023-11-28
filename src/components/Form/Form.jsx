@@ -12,7 +12,7 @@ const INITIAL_FORM_STATE = {
   description: '',
   category: '',
   date: '',
-  type: '',
+  typeTransaction: '',
 };
 
 export default function Form({ type = 'income' }) {
@@ -30,11 +30,11 @@ export default function Form({ type = 'income' }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (type === 'income') {
-      setInput({ ...inputState, type: 'income' });
+      setInput({ ...inputState, typeTransaction: 'income' });
       addIncome(inputState);
       setInput(INITIAL_FORM_STATE);
     } else {
-      setInput({ ...inputState, type: 'expense' });
+      setInput({ ...inputState, typeTransaction: 'expense' });
       addExpense(inputState);
       setInput(INITIAL_FORM_STATE);
     }

@@ -3,9 +3,15 @@ import { InnerLayout } from '@/styles';
 import Form from '../Form/Form';
 import { useGlobalContext } from '@/hooks';
 import { ExpenseItem } from '@/components';
+import React from 'react';
 
 export default function Expenses() {
-  const { expenses, totalExpense } = useGlobalContext();
+  const { expenses, totalExpense, getExpenses } = useGlobalContext();
+
+  React.useEffect(() => {
+    getExpenses();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <ExpensesContainer>

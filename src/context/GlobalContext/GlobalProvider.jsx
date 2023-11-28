@@ -10,9 +10,32 @@ export default function GlobalProvider({ children }) {
   const [expenses, setExpenses] = React.useState([]);
   const [error, setError] = React.useState('');
 
-  const addIncome = async (income) => {
+  const login = async (email, password) => {
     const response = await axios
-      .post(`${BASE_URL}${config.API_ROUTES.ADD_INCOME}`, income)
+      .post(
+        `${BASE_URL}${config.API_ROUTES.LOGIN_USER}`,
+        {
+          email,
+          password,
+        },
+        { withCredentials: true },
+      )
+      .then((response) => {
+        alert('SUCCESS LOGIN');
+        getIncomes();
+        totalIncome();
+      })
+      .catch((error) => {
+        setError(error);
+      });
+  };
+
+  const addIncome = async (income) => {
+    const incomeToAad = { ...income, type: 'income' };
+    const response = await axios
+      .post(`${BASE_URL}${config.API_ROUTES.ADD_INCOME}`, incomeToAad, {
+        withCredentials: true,
+      })
       .then((res) => {
         alert('SUCCESS INCOME ADDED');
         getIncomes();
@@ -35,13 +58,31 @@ export default function GlobalProvider({ children }) {
       });
   };
   const getIncomes = async () => {
-    const res = await axios.get(`${BASE_URL}${config.API_ROUTES.GET_INCOMES}`);
-    setIncomes(res.data.incomes);
-    totalIncome();
+    try {
+      const res = await axios.get(
+        `${BASE_URL}${config.API_ROUTES.GET_INCOMES}`,
+        {
+          withCredentials: true,
+        },
+      );
+      setIncomes(res.data.incomes);
+      totalIncome();
+    } catch (error) {
+      console.log('ERROR', error);
+    }
   };
   const getExpenses = async () => {
-    const res = await axios.get(`${BASE_URL}${config.API_ROUTES.GET_EXPENSES}`);
-    setExpenses(res.data.expenses);
+    try {
+      const res = await axios.get(
+        `${BASE_URL}${config.API_ROUTES.GET_EXPENSES}`,
+        { withCredentials: true },
+      );
+      console.log('RESPONSE', res);
+      setExpenses(res.data.expenses);
+      totalExpense();
+    } catch (error) {
+      console.log('ERROR', error);
+    }
   };
 
   const deleteIncome = async (id) => {
@@ -87,12 +128,13 @@ export default function GlobalProvider({ children }) {
   };
 
   React.useEffect(() => {
-    getIncomes();
+    // getIncomes();
     getExpenses();
     totalIncome();
     totalExpense();
     totalBalance();
     transactionsHistory();
+    login('chelobat16411@gmail.com', 'chelobat16');
   }, []);
 
   return (
@@ -101,6 +143,7 @@ export default function GlobalProvider({ children }) {
         incomes,
         expenses,
         error,
+        setError,
         addIncome,
         addExpense,
         getIncomes,

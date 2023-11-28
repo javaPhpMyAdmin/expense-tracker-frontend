@@ -5,12 +5,12 @@ import { Form } from '@/components';
 import { useGlobalContext } from '@/hooks';
 import { IncomeItem } from '@/components';
 export default function Incomes() {
-  const { incomes, totalIncome } = useGlobalContext();
+  const { incomes, totalIncome, getIncomes } = useGlobalContext();
 
-  // React.useEffect(() => {
-  //   getIncomes();
-  //   // eslint-disable-next-line
-  // }, []);
+  React.useEffect(() => {
+    getIncomes();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <IncomesContainer>
