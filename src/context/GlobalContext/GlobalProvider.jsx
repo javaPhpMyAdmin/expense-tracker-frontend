@@ -9,6 +9,31 @@ export default function GlobalProvider({ children }) {
   const [incomes, setIncomes] = React.useState([]);
   const [expenses, setExpenses] = React.useState([]);
   const [error, setError] = React.useState('');
+  const [user, setUser] = React.useState(null);
+
+  const loginWithGoogle = async (token) => {
+    const response = await axios
+      .post(
+        `${BASE_URL}${config.API_ROUTES.LOGIN_WITH_GOOGLE}`,
+        {
+          token: token,
+        },
+        {
+          withCredentials: true,
+        },
+      )
+      .then((response) => {
+        alert('SUCCESS LOGIN WITH GOOGLE');
+        console.log('RESPONSE LOGIN WITH GOOGLE', response);
+        //setUser(response.data.user)
+        getIncomes();
+        getExpenses();
+        totalIncome();
+      })
+      .catch((error) => {
+        setError(error);
+      });
+  };
 
   const login = async (email, password) => {
     const response = await axios
@@ -23,6 +48,7 @@ export default function GlobalProvider({ children }) {
       .then((response) => {
         alert('SUCCESS LOGIN');
         getIncomes();
+        getExpenses();
         totalIncome();
       })
       .catch((error) => {
@@ -154,6 +180,7 @@ export default function GlobalProvider({ children }) {
         totalExpense,
         totalBalance,
         transactionsHistory,
+        loginWithGoogle,
       }}
     >
       {children}

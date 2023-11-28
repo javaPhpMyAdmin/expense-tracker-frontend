@@ -8,5 +8,6 @@ export const config = {
     GET_EXPENSES: '/get-expenses-by-user-id',
     DELETE_EXPENSE: '/delete-expense',
     LOGIN_USER: '/auth/login',
+    LOGIN_WITH_GOOGLE: '/auth/googleAuth',
   },
 };

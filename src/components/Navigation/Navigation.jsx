@@ -1,11 +1,20 @@
 import { styled } from 'styled-components';
 import avatar from '@/assets/avatar.png';
 import { navItems, signout } from '@/utils';
+import { useGoogleLogin } from '@react-oauth/google';
+import { useGlobalContext } from '@/hooks';
 
 export default function Navigation({ active, setActive }) {
+  const { loginWithGoogle } = useGlobalContext();
   const handleLinkActive = (index) => {
     setActive(index);
   };
+
+  const handleLoginWithGoogle = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      console.log(tokenResponse), loginWithGoogle(tokenResponse);
+    },
+  });
 
   return (
     <NavContainer>
@@ -28,8 +37,8 @@ export default function Navigation({ active, setActive }) {
           </li>
         ))}
       </ul>
-      <div className="bottom-nav">
-        <li>{signout} Sign Out</li>
+      <div className="bottom-nav" onClick={() => handleLoginWithGoogle()}>
+        <li>{signout} Sign In with Google</li>
       </div>
     </NavContainer>
   );
