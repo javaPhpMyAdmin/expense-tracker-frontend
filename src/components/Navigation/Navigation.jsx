@@ -1,7 +1,7 @@
 import { styled } from 'styled-components';
 import avatar from '@/assets/avatar.png';
 import { navItems, signout } from '@/utils';
-import { useGoogleLogin } from '@react-oauth/google';
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 import { useGlobalContext } from '@/hooks';
 
 export default function Navigation({ active, setActive }) {
@@ -12,9 +12,18 @@ export default function Navigation({ active, setActive }) {
 
   const handleLoginWithGoogle = useGoogleLogin({
     onSuccess: (tokenResponse) => {
-      console.log(tokenResponse), loginWithGoogle(tokenResponse);
+      console.log('GOOGLE RESPONSE', tokenResponse),
+        loginWithGoogle(tokenResponse.access_token);
     },
   });
+
+  const onSuccess = async (res) => {
+    try {
+      loginWithGoogle(res.access_token);
+    } catch (err) {
+      console.log('ERROR', err);
+    }
+  };
 
   return (
     <NavContainer>
@@ -40,6 +49,10 @@ export default function Navigation({ active, setActive }) {
       <div className="bottom-nav" onClick={() => handleLoginWithGoogle()}>
         <li>{signout} Sign In with Google</li>
       </div>
+      <GoogleLogin
+        clientId="548284117977-i6o9pkvotmfhu3mgvoj0dt2uqoel82bj.apps.googleusercontent.com"
+        onSuccess={onSuccess}
+      />
     </NavContainer>
   );
 }
