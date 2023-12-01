@@ -15,11 +15,14 @@ export default function Navigation({ active, setActive }) {
       console.log('GOOGLE RESPONSE', tokenResponse),
         loginWithGoogle(tokenResponse.access_token);
     },
+    scope: 'openid',
+    token_type: 'Bearer',
   });
 
   const onSuccess = async (res) => {
     try {
-      loginWithGoogle(res.access_token);
+      console.log('RESPONSE GOOGLE AUTH', res);
+      loginWithGoogle(res.credential);
     } catch (err) {
       console.log('ERROR', err);
     }
@@ -50,8 +53,10 @@ export default function Navigation({ active, setActive }) {
         <li>{signout} Sign In with Google</li>
       </div>
       <GoogleLogin
-        clientId="548284117977-i6o9pkvotmfhu3mgvoj0dt2uqoel82bj.apps.googleusercontent.com"
+        // clientId="548284117977-i6o9pkvotmfhu3mgvoj0dt2uqoel82bj.apps.googleusercontent.com"
         onSuccess={onSuccess}
+        onError={(error) => console.log(error)}
+        scopes={['openid']}
       />
     </NavContainer>
   );
