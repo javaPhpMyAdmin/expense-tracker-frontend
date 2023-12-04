@@ -1,8 +1,9 @@
+import React from 'react';
 import { styled } from 'styled-components';
 import avatar from '@/assets/avatar.png';
 import { navItems, signout } from '@/utils';
-import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 import { useGlobalContext } from '@/hooks';
+import { jwtDecode } from 'jwt-decode';
 
 export default function Navigation({ active, setActive }) {
   const { loginWithGoogle } = useGlobalContext();
@@ -10,28 +11,31 @@ export default function Navigation({ active, setActive }) {
     setActive(index);
   };
 
-  const handleLoginWithGoogle = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
-      console.log('GOOGLE RESPONSE', tokenResponse),
-        loginWithGoogle(tokenResponse.access_token);
-    },
-    scope: 'openid',
-    token_type: 'Bearer',
-  });
+  // const handleLoginWithGoogle = () => loginWithGoogle();
+  function handleCallbackResponse(response) {
+    console.log('jwt from google', response.credential);
+    // loginWithGoogle(response.credential);
+    const decode = jwtDecode(response.credential);
+    console.log('user', decode);
+  }
 
-  const onSuccess = async (res) => {
-    try {
-      console.log('RESPONSE GOOGLE AUTH', res);
-      loginWithGoogle(res.credential);
-    } catch (err) {
-      console.log('ERROR', err);
-    }
-  };
+  React.useEffect(() => {
+    /* global google */
+    google.accounts.id.initialize({
+      client_id:
+        '548284117977-oh785711uc41057t0unql9iodelt2jfi.apps.googleusercontent.com',
+      callback: handleCallbackResponse,
+    });
+
+    google.accounts.id.renderButton(document.getElementById('signInDiv'), {
+      size: 'large',
+    });
+  }, []);
 
   return (
     <NavContainer>
       <div className="user-con">
-        <img src={avatar} alt="avatar" />
+        <img src={avatar} />
         <div className="nav-text">
           <h2>Marcelo</h2>
           <p>Your Money</p>
@@ -49,15 +53,11 @@ export default function Navigation({ active, setActive }) {
           </li>
         ))}
       </ul>
-      <div className="bottom-nav" onClick={() => handleLoginWithGoogle()}>
-        <li>{signout} Sign In with Google</li>
+      <div className="bottom-nav">
+        <div id="signInDiv" style={{ cursor: 'pointer' }}>
+          {signout} Sign In with Google
+        </div>
       </div>
-      <GoogleLogin
-        // clientId="548284117977-i6o9pkvotmfhu3mgvoj0dt2uqoel82bj.apps.googleusercontent.com"
-        onSuccess={onSuccess}
-        onError={(error) => console.log(error)}
-        scopes={['openid']}
-      />
     </NavContainer>
   );
 }
