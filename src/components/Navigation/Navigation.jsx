@@ -14,9 +14,9 @@ export default function Navigation({ active, setActive }) {
   // const handleLoginWithGoogle = () => loginWithGoogle();
   function handleCallbackResponse(response) {
     console.log('jwt from google', response.credential);
-    // loginWithGoogle(response.credential);
-    const decode = jwtDecode(response.credential);
-    console.log('user', decode);
+    loginWithGoogle(response.credential);
+    // const decode = jwtDecode(response.credential);
+    // console.log('user', decode);
   }
 
   React.useEffect(() => {
