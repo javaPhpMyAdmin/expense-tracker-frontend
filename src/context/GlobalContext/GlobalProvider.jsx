@@ -35,26 +35,26 @@ export default function GlobalProvider({ children }) {
       });
   };
 
-  const login = async (email, password) => {
-    const response = await axios
-      .post(
-        `${BASE_URL}${config.API_ROUTES.LOGIN_USER}`,
-        {
-          email,
-          password,
-        },
-        { withCredentials: true },
-      )
-      .then((response) => {
-        alert('SUCCESS LOGIN');
-        getIncomes();
-        getExpenses();
-        totalIncome();
-      })
-      .catch((error) => {
-        setError(error);
-      });
-  };
+  // const login = async (email, password) => {
+  //   const response = await axios
+  //     .post(
+  //       `${BASE_URL}${config.API_ROUTES.LOGIN_USER}`,
+  //       {
+  //         email,
+  //         password,
+  //       },
+  //       { withCredentials: true },
+  //     )
+  //     .then((response) => {
+  //       alert('SUCCESS LOGIN');
+  //       getIncomes();
+  //       getExpenses();
+  //       totalIncome();
+  //     })
+  //     .catch((error) => {
+  //       setError(error);
+  //     });
+  // };
 
   const addIncome = async (income) => {
     const incomeToAad = { ...income, type: 'income' };
@@ -160,7 +160,7 @@ export default function GlobalProvider({ children }) {
     totalExpense();
     totalBalance();
     transactionsHistory();
-    login('chelobat16411@gmail.com', 'chelobat16');
+    // login('chelobat16411@gmail.com', 'chelobat16');
   }, []);
 
   return (
